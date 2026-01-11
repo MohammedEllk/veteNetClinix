@@ -1,0 +1,127 @@
+.owners-page{
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+.owners-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+}
+.owners-search{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+}
+.owners-search input{
+  height: 40px;
+  width: 320px;
+  max-width: 50vw;
+  border:1px solid #ddd;
+  border-radius: 10px;
+  padding: 0 12px;
+}
+.page-error{
+  background:#ffe7e7;
+  color:#b10000;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ffd2d2;
+}
+.owners-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+.owner-card{
+  background:#fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  padding: 14px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+.owner-name{
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: lowercase;
+}
+.owner-line{
+  font-size: 13px;
+  color:#444;
+}
+.owner-actions{
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn-edit{
+  background:#6c63ff;
+  color:#fff;
+  border:none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor:pointer;
+}
+.btn-danger{
+  background:#c74343;
+  color:#fff;
+  border:none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor:pointer;
+}
+.btn-add-animal{
+  margin-top: 6px;
+  background:#6c63ff;
+  color:#fff;
+  border:none;
+  height: 40px;
+  border-radius: 10px;
+  cursor:pointer;
+}
+.btn-light{
+  border:1px solid #ccc;
+  background:#fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor:pointer;
+}
+.btn-primary{
+  border:none;
+  background:#137a54;
+  color:#fff;
+  padding: 9px 14px;
+  border-radius: 10px;
+  cursor:pointer;
+}
+
+.pagination{
+  display:flex;
+  justify-content:center;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.page-btn{
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+}
+
+.page-btn.active{
+  background: #f3c6c6; /* comme ton style pagination rose clair */
+  border-color: #eaa;
+  font-weight: 700;
+}
+
+.page-btn:disabled{
+  opacity: .5;
+  cursor: not-allowed;
+}
+
