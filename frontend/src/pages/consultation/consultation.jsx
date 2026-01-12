@@ -110,8 +110,9 @@ export default function ConsultationsPage() {
 
   return (
     <MainLayout>
-      <div className="consult-header">
-        <h2>Consultations</h2>
+      <div className="animals-header">
+        <div className="hello">Bonjour Dr Mohammed</div>
+        <h2 className="title">Liste des consultations</h2>
         <div className="toolbar">
           <input
             className="search"
@@ -125,26 +126,24 @@ export default function ConsultationsPage() {
           </button>
         </div>
         {err && <div className="page-error">{err}</div>}
-        <div className="consult-grid">
+        <div className="cards-grid">
           {consultations.map((consultation) => {
             const animal = animals.find(a => a.id === consultation.animal_id);
             return (
-              <div className="consult-card" key={consultation.id}>
-                <div className="top">
-                  <span className="date">{consultation.date_consultation}</span>
-                  <span className="animal">{animal ? animal.nom : "—"}</span>
-                </div>
-                <div className="line"><b>Motif :</b> {consultation.motif}</div>
-                <div className="line"><b>Diagnostic :</b> {consultation.diagnostic}</div>
-                <div className="metrics">
-                  <span>Poids : {consultation.poids || "—"} kg</span>
-                  <span>Température : {consultation.temperature || "—"} °C</span>
-                </div>
-                <div className="actions">
-                  <button className="btn-edit" onClick={() => openEdit(consultation)} disabled={loading}>Modifier</button>
-                  <button className="btn-light" onClick={() => openDetails(consultation)} disabled={loading}>Détails</button>
-                  <button className="btn-doc" onClick={() => openDocs(consultation)} disabled={loading}>Documents</button>
-                  <button className="btn-danger" onClick={() => onDelete(consultation)} disabled={loading}>Supprimer</button>
+              <div className="animal-card" key={consultation.id}>
+                <div className="animal-name">{animal ? animal.nom : "—"}</div>
+                <div className="animal-sub">{consultation.motif} ({consultation.date_consultation})</div>
+                <div className="animal-owner">Diagnostic : {consultation.diagnostic || "—"}</div>
+                <div className="animal-owner">Poids : {consultation.poids || "—"} kg | Température : {consultation.temperature || "—"} °C</div>
+                <div className="card-actions">
+                  <button className="btn-purple" onClick={() => openEdit(consultation)} disabled={loading}>Modifier</button>
+                  <button className="btn" onClick={() => openDetails(consultation)} disabled={loading}>Détails</button>
+                  <button className="btn" onClick={() => openDocs(consultation)} disabled={loading}>Documents</button>
+                  <button className="btn-icon btn-danger" title="Supprimer" onClick={() => onDelete(consultation)} disabled={loading}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none">
+                      <path d="M6 6L14 14M6 14L14 6" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </button>
                 </div>
               </div>
             );

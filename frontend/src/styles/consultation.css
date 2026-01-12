@@ -1,3 +1,73 @@
+/* --- Amélioration du style des cartes de consultation --- */
+.consultation-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  padding: 24px 32px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 340px;
+  max-width: 420px;
+  transition: box-shadow 0.2s;
+}
+
+.consultation-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.consultation-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.consultation-card-details {
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.consultation-card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.consultation-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.consultation-btn.modifier {
+  background: #a084e8;
+  color: #fff;
+}
+
+.consultation-btn.details {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.consultation-btn.documents {
+  background: #bdbdbd;
+  color: #222;
+}
+
+.consultation-btn.supprimer {
+  background: #e57373;
+  color: #fff;
+}
+
+.consultation-btn:hover {
+  opacity: 0.85;
+}
 .consult-header {
   display: flex;
   justify-content: space-between;

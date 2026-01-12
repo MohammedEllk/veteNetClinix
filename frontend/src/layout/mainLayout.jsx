@@ -33,9 +33,7 @@ export default function MainLayout({ children }) {
           <NavLink to="/consultations" className="sidebar-link">
             Consultations
           </NavLink>
-          <NavLink to="/documents" className="sidebar-link">
-            Documents
-          </NavLink>
+
           {user?.role === "admin" && (
             <NavLink to="/veterinaires" className="sidebar-link">
               Vétérinaires

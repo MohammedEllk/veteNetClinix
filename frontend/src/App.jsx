@@ -52,15 +52,6 @@ export default function App() {
         }
       />
 
-      <Route
-        path="/documents"
-        element={
-          <ProtectedRoute>
-            <DocumentsPage />
-          </ProtectedRoute>
-        }
-      />
-
     <Route
       path="/veterinaires"
       element={
