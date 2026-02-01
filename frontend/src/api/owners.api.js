@@ -1,55 +1,43 @@
-
-const STORAGE_KEY = 'owners';
-let fakeOwners = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
-  { id: 1, nom: 'John Doe', telephone: '0601020304', email: 'john@example.com', adresse: 'Paris' },
-  { id: 2, nom: 'Jane Smith', telephone: '0605060708', email: 'jane@example.com', adresse: 'Lyon' },
-];
-
-const saveToStorage = () => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(fakeOwners));
-};
+import axiosInstance from './axiosInstance';
 
 export const listOwners = async (q = "", page = 1, perPage = 8) => {
-  let filtered = fakeOwners;
-  if (q) {
-    filtered = filtered.filter(o =>
-      o.nom.toLowerCase().includes(q.toLowerCase()) ||
-      o.telephone.includes(q) ||
-      o.email.toLowerCase().includes(q.toLowerCase())
-    );
-  }
-  const total = filtered.length;
-  const lastPage = Math.max(1, Math.ceil(total / perPage));
-  const start = (page - 1) * perPage;
-  const end = start + perPage;
+  const response = await axiosInstance.get('/proprietaires', {
+    params: { q, page, per_page: perPage }
+  });
   return {
-    data: filtered.slice(start, end),
-    total,
-    lastPage,
+    data: response.data.data,
+    total: response.data.total,
+    lastPage: response.data.last_page,
   };
 };
 
 export const createOwner = async (owner) => {
-  const newOwner = { ...owner, id: Date.now() };
-  fakeOwners.push(newOwner);
-  saveToStorage();
-  return newOwner;
+  const response = await axiosInstance.post('/proprietaires', {
+    nom: owner.nom,
+    prenom: owner.prenom,
+    telephone: owner.telephone,
+    email: owner.email,
+    adresse: owner.adresse,
+  });
+  return response.data;
 };
 
 export const updateOwner = async (id, data) => {
-  const idx = fakeOwners.findIndex(o => o.id === id);
-  if (idx === -1) throw new Error('Not found');
-  fakeOwners[idx] = { ...fakeOwners[idx], ...data };
-  saveToStorage();
-  return fakeOwners[idx];
+  const response = await axiosInstance.put(`/proprietaires/${id}`, data);
+  return response.data;
 };
 
 export const deleteOwner = async (id) => {
-  fakeOwners = fakeOwners.filter(o => o.id !== id);
-  saveToStorage();
+  await axiosInstance.delete(`/proprietaires/${id}`);
   return id;
 };
 
 export const getOwner = async (id) => {
-  return fakeOwners.find(o => o.id === id) || null;
+  const response = await axiosInstance.get(`/proprietaires/${id}`);
+  return response.data;
+};
+
+export const getOwnerDetails = async (id) => {
+  const response = await axiosInstance.get(`/proprietaires/${id}/details`);
+  return response.data;
 };

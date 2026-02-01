@@ -1,12 +1,30 @@
-
 import { useEffect, useMemo, useState } from "react";
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  CardActions,
+  Grid,
+  IconButton,
+  Skeleton,
+  Alert,
+  Avatar,
+} from "@mui/material";
+import {
+  Add as AddIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Visibility as VisibilityIcon,
+  LocalHospital as LocalHospitalIcon,
+  Email as EmailIcon,
+  Badge as BadgeIcon,
+} from "@mui/icons-material";
 import MainLayout from "../../layout/mainLayout";
-import "../../styles/ownersAnimals.css";
 import VeterinaireModal from "../../components/veterinaireModal";
 import { getAllUsers, addUser, updateUser, removeUser } from "../../services/authService.jsx";
-
-// Modèle JS pour un vétérinaire
-// { id, name, email, password, role: "veterenaire" }
 
 // API vétérinaires basée sur les users (role=veterenaire)
 // eslint-disable-next-line react-refresh/only-export-components
@@ -27,14 +45,12 @@ function pickFirstError(err) {
 export default function VeterinairesPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  // modal
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState("create"); // "create" | "edit" | "details"
+  const [mode, setMode] = useState("create");
   const [selected, setSelected] = useState(null);
-  // form
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); // seulement create / reset password
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const isReadOnly = useMemo(() => mode === "details", [mode]);
@@ -127,59 +143,157 @@ export default function VeterinairesPage() {
     }
   }
 
-  const modalTitle =
-    mode === "create"
-      ? "Ajouter un vétérinaire"
-      : mode === "edit"
-      ? "Modifier un vétérinaire"
-      : "Détails vétérinaire";
-
   return (
     <MainLayout>
-      <div className="page-header">
-        <h2 className="page-title">Vétérinaires (Admin)</h2>
-        <button className="btn-add" onClick={openCreate}>
-          Ajouter vétérinaire
-        </button>
-      </div>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        {/* Header */}
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Avatar sx={{ bgcolor: "error.main", width: 48, height: 48 }}>
+              <LocalHospitalIcon fontSize="large" />
+            </Avatar>
+            <Box>
+              <Typography variant="h4" fontWeight="bold" color="error.dark">
+                Vétérinaires
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Gestion des comptes vétérinaires (Admin)
+              </Typography>
+            </Box>
+          </Box>
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<AddIcon />}
+            onClick={openCreate}
+            disabled={loading}
+            size="large"
+            sx={{
+              borderRadius: 2,
+              px: 3,
+              textTransform: "none",
+              fontSize: "1rem",
+            }}
+          >
+            Ajouter Vétérinaire
+          </Button>
+        </Box>
 
-      {loading && <p>Chargement...</p>}
+        {/* Error Alert */}
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError("")}>
+            {error}
+          </Alert>
+        )}
 
-      <div className="cards-grid">
-        {items.map((v) => (
-          <div key={v.id} className="animal-card">
-            <div className="animal-name">{v.name}</div>
-            <div className="animal-owner">{v.email}</div>
-            <div className="card-actions">
-              <button className="btn-light" onClick={() => openDetails(v)}>
-                Détails
-              </button>
-              <button className="btn-purple" onClick={() => openEdit(v)}>
-                Modifier
-              </button>
-              <button className="btn-icon btn-danger" title="Supprimer" onClick={() => remove(v)}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <path d="M6 6L14 14M6 14L14 6" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+        {/* Veterinaires Grid */}
+        <Grid container spacing={3}>
+          {loading && items.length === 0
+            ? Array.from({ length: 6 }).map((_, idx) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
+                  <Card>
+                    <CardContent>
+                      <Skeleton variant="rectangular" height={120} />
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))
+            : items.map((v) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={v.id}>
+                  <Card
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      transition: "transform 0.2s, box-shadow 0.2s",
+                      "&:hover": {
+                        transform: "translateY(-4px)",
+                        boxShadow: 4,
+                      },
+                    }}
+                  >
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                        <Avatar sx={{ bgcolor: "error.light" }}>
+                          <LocalHospitalIcon />
+                        </Avatar>
+                        <Typography variant="h6" fontWeight="bold">
+                          {v.name}
+                        </Typography>
+                      </Box>
 
-      <VeterinaireModal
-        open={open}
-        mode={mode}
-        onClose={closeModal}
-        onSubmit={submit}
-        name={name}
-        setName={setName}
-        email={email}
-        setEmail={setEmail}
-        password={password}
-        setPassword={setPassword}
-        error={error}
-      />
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                          <EmailIcon fontSize="small" color="action" />
+                          <Typography variant="body2" color="text.secondary" noWrap>
+                            {v.email}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                          <BadgeIcon fontSize="small" color="action" />
+                          <Typography variant="body2" color="text.secondary">
+                            ID: {v.id}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </CardContent>
+
+                    <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => openDetails(v)}
+                        disabled={loading}
+                        title="Détails"
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        color="info"
+                        onClick={() => openEdit(v)}
+                        disabled={loading}
+                        title="Modifier"
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => remove(v)}
+                        disabled={loading}
+                        title="Supprimer"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+        </Grid>
+
+        {items.length === 0 && !loading && (
+          <Box sx={{ textAlign: "center", py: 8 }}>
+            <Typography variant="h6" color="text.secondary">
+              Aucun vétérinaire enregistré
+            </Typography>
+          </Box>
+        )}
+
+        <VeterinaireModal
+          open={open}
+          mode={mode}
+          onClose={closeModal}
+          onSubmit={submit}
+          name={name}
+          setName={setName}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          error={error}
+        />
+      </Container>
     </MainLayout>
   );
 }

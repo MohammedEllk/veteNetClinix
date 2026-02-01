@@ -17,23 +17,25 @@ export function AuthProvider({ children }) {
         return;
     }
 
-    try {
-        const u = getCurrentUser();   // ✅ sync
-        setUser(u);                  // u peut être null => OK
-    } finally {
-        setLoading(false);
+    async function loadUser() {
+      try {
+          const u = await getCurrentUser();
+          setUser(u);
+      } catch (error) {
+          console.error('Error loading user:', error);
+          setUser(null);
+      } finally {
+          setLoading(false);
+      }
     }
+    
+    loadUser();
   }, []);
 
   const login = async (email, password) => {
     const u = await apiLogin(email, password);
     setUser(u);
   };
-
-  /*const register = async (name, email, password) => {
-    const u = await apiRegister(name, email, password);
-    setUser(u);
-  };*/
 
   const logout = async () => {
     await apiLogout();

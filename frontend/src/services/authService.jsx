@@ -1,5 +1,34 @@
+import { login as apiLogin, logout as apiLogout, getCurrentUser as apiGetCurrentUser, register as apiRegister } from '../api/auth.api';
+
+export async function login(email, password) {
+  const data = await apiLogin(email, password);
+  return data.user;
+}
+
+export function logout() {
+  apiLogout();
+}
+
+export async function getCurrentUser() {
+  return await apiGetCurrentUser();
+}
+
+export async function register(name, email, password) {
+  const data = await apiRegister(name, email, password);
+  return data.user;
+}
+
+export function isAuthenticated() {
+  return !!localStorage.getItem('accessToken');
+}
+
 // --- Gestion des utilisateurs (pour vétérinaires) ---
 const USERS_KEY = "users";
+const fakeUsers = [
+  { id: 1, name: "DrMoha", email: "drMoha@test.com", password: "123456", role: "veterenaire" },
+  { id: 2, name: "Admin", email: "aa@aa.com", password: "aa", role: "admin" },
+];
+
 function getAllUsers() {
   return JSON.parse(localStorage.getItem(USERS_KEY)) || fakeUsers;
 }
@@ -25,65 +54,3 @@ function removeUser(id) {
 }
 
 export { getAllUsers, addUser, updateUser, removeUser };
-const STORAGE_KEY = "accessToken";
-
-const fakeUsers = [
-  { id: 1, name: "DrMoha", email: "drMoha@test.com", password: "123456", role: "veterenaire" },
-  { id: 2, name: "Admin", email: "aa@aa.com", password: "aa", role: "admin" },
-];
-
-function createFakeToken(payload) {
-  return btoa(JSON.stringify({
-    ...payload,
-    exp: Date.now() + 1000 * 60 * 60 * 24,
-  }));
-}
-
-function decodeFakeToken(token) {
-  return JSON.parse(atob(token));
-}
-
-export async function login(email, password) {
-  const user = fakeUsers.find(
-    u => u.email === email && u.password === password
-  );
-
-  if (!user) {
-    throw new Error("Le mots de passe ou l'email sont incorrects.");
-  }
-
-  const token = createFakeToken({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-  });
-
-  localStorage.setItem(STORAGE_KEY, token);
-  return user;
-}
-
-export function logout() {
-  localStorage.removeItem(STORAGE_KEY);
-}
-
-export function getCurrentUser() {
-  const token = localStorage.getItem(STORAGE_KEY);
-  if (!token) return null;
-
-  try {
-    const data = decodeFakeToken(token);
-    if (Date.now() > data.exp) {
-      logout();
-      return null;
-    }
-    return data;
-  } catch {
-    logout();
-    return null;
-  }
-}
-
-export function isAuthenticated() {
-  return !!getCurrentUser();
-}
