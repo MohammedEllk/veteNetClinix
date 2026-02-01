@@ -1762,7 +1762,7 @@ php artisan migrate:fresh --seed
 ### 12.4 Contact et support
 
 **Développeur** : Mohammed Ellouke
-**Email** : monslouke@gmail.com
+**Email** : mohammed.ellouke5@gmail.com
 **GitHub** : https://github.com/MohammedEllk
 **Documentation** : Ce rapport + commentaires inline
 
