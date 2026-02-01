@@ -1357,65 +1357,220 @@ server {
 
 ## 10. Tests et maintenance
 
-### 10.1 Tests backend (Laravel)
+### 10.1 Tests Unitaires
 
-**Types de tests** :
+#### 10.1.1 Structure des Tests
+
+**Backend (Laravel/PHPUnit)**
+
+Les tests backend sont organisés dans le dossier `backend/tests/`:
+
+**Tests Unitaires (`tests/Unit/`)**
+
+- **AnimalTest.php** - Tests pour le modèle Animal
+  - Création d'animal
+  - Relation avec Proprietaire
+  - Relations avec Consultations
+  - Validation des champs (date_naissance, poids)
+  - Vérification des champs obligatoires
+
+- **ProprietaireTest.php** - Tests pour le modèle Proprietaire
+  - Création de propriétaire
+  - Relation avec Animaux
+  - Mise à jour des informations
+  - Suppression
+
+- **ConsultationTest.php** - Tests pour le modèle Consultation
+  - Création de consultation
+  - Relations avec Animal et Vétérinaire
+  - Validation des champs (date_consultation)
+  - Relations avec Documents
+  - Vérification des champs obligatoires
+
+**Factories (`database/factories/`)**
+
+- **ProprietaireFactory.php** - Génère des propriétaires de test
+- **AnimalFactory.php** - Génère des animaux de test
+- **ConsultationFactory.php** - Génère des consultations de test
+
+**Frontend (React/Vitest)**
+
+Les tests frontend sont organisés dans le dossier `frontend/src/`:
+
+**Tests de Services (`src/services/`)**
+
+- **authService.test.js** - Tests pour le service d'authentification
+  - Vérification du statut d'authentification
+  - Gestion du token dans localStorage
+
+**Tests de Composants (`src/`)**
+
+- **App.test.jsx** - Tests pour le composant principal
+  - Rendu sans erreur
+  - Configuration du routing
+
+**Tests Unitaires (`src/tests/`)**
+
+- **utils.test.js** - Tests des fonctions utilitaires
+  - Formatage de dates
+  - Validation d'email
+  - Validation de numéro de téléphone
+  - Calcul d'âge
+
+- **validation.test.js** - Tests de validation des données
+  - Validation des données Animal
+  - Validation des données Proprietaire
+  - Validation des données Consultation
+
+#### 10.1.2 Exécution des Tests
+
+**Backend**
+
 ```bash
-# Tests unitaires
-php artisan test --filter=UserTest
-
-# Tests de fonctionnalités
-php artisan test --filter=ProprietaireControllerTest
-
 # Tous les tests
+cd backend
 php artisan test
+
+# Tests unitaires uniquement
+php artisan test --testsuite=Unit
+
+# Tests avec couverture
+php artisan test --coverage
+
+# Tests d'un fichier spécifique
+php artisan test --filter=AnimalTest
 ```
 
-**Exemple de test** :
-```php
-// tests/Feature/ProprietaireControllerTest.php
-public function test_can_create_proprietaire()
-{
-    $response = $this->actingAs($this->user)
-        ->postJson('/api/proprietaires', [
-            'nom' => 'John Doe',
-            'email' => 'john@example.com',
-            'telephone' => '0612345678',
-        ]);
+**Frontend**
 
-    $response->assertStatus(201);
-    $this->assertDatabaseHas('proprietaires', [
-        'nom' => 'John Doe',
-    ]);
+```bash
+# Tous les tests
+cd frontend
+npm test
+
+# Tests avec interface utilisateur
+npm run test:ui
+
+# Tests avec couverture de code
+npm run test:coverage
+
+# Mode watch (re-exécution automatique)
+npm test -- --watch
+```
+
+#### 10.1.3 Configuration
+
+**Backend (PHPUnit)**
+
+Configuration dans `backend/phpunit.xml`:
+- Base de données SQLite en mémoire pour les tests
+- Variables d'environnement de test
+- Inclusion du code source pour la couverture
+
+**Frontend (Vitest)**
+
+Configuration dans `frontend/vitest.config.js`:
+- Environnement jsdom pour simuler le DOM
+- Support de React
+- Fichier de setup global
+
+#### 10.1.4 Résultats Actuels
+
+**Backend**
+✅ **17 tests passés** (43 assertions)
+- AnimalTest: 6 tests
+- ConsultationTest: 6 tests
+- ProprietaireTest: 4 tests
+- ExampleTest: 1 test
+
+**Frontend**
+✅ **15 tests passés**
+- Tests de validation: 8 tests
+- Tests utilitaires: 7 tests
+
+#### 10.1.5 Bonnes Pratiques
+
+**Tests Backend**
+- Utiliser `RefreshDatabase` pour une base de données propre
+- Utiliser les Factories pour générer des données de test
+- Tester les relations entre modèles
+- Vérifier les validations et contraintes
+
+**Tests Frontend**
+- Tester le comportement, pas l'implémentation
+- Utiliser `@testing-library/react` pour les composants
+- Mocker les appels API
+- Tester les états et interactions utilisateur
+
+#### 10.1.6 Ajout de Nouveaux Tests
+
+**Backend**
+
+```php
+<?php
+
+namespace Tests\Unit;
+
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class MonNouveauTest extends TestCase
+{
+    use RefreshDatabase;
+
+    /** @test */
+    public function mon_test()
+    {
+        // Arrange - Préparer les données
+        
+        // Act - Exécuter l'action
+        
+        // Assert - Vérifier le résultat
+        $this->assertTrue(true);
+    }
 }
 ```
 
-### 10.2 Tests frontend (React)
+**Frontend**
 
-**Outils recommandés** :
-- Jest : Tests unitaires
-- React Testing Library : Tests composants
-- Cypress : Tests E2E
-
-```bash
-# Installation
-npm install --save-dev @testing-library/react @testing-library/jest-dom vitest
-
-# Exécution
-npm run test
-```
-
-**Exemple de test** :
 ```javascript
-// src/components/__tests__/StatCard.test.jsx
-import { render, screen } from '@testing-library/react';
-import StatCard from '../StatCard';
+import { describe, it, expect } from 'vitest';
 
-test('renders stat card with value', () => {
-  render(<StatCard title="Owners" value={42} icon={PersonIcon} />);
-  expect(screen.getByText('42')).toBeInTheDocument();
+describe('Mon Nouveau Test', () => {
+  it('devrait faire quelque chose', () => {
+    // Arrange - Préparer les données
+    
+    // Act - Exécuter l'action
+    
+    // Assert - Vérifier le résultat
+    expect(true).toBe(true);
+  });
 });
 ```
+
+#### 10.1.7 CI/CD
+
+Pour intégrer les tests dans un pipeline CI/CD:
+
+```yaml
+# Exemple pour GitHub Actions
+backend-tests:
+  - php artisan test --coverage
+
+frontend-tests:
+  - npm install
+  - npm test -- --run
+```
+
+#### 10.1.8 Ressources
+
+- [PHPUnit Documentation](https://phpunit.de/documentation.html)
+- [Laravel Testing](https://laravel.com/docs/testing)
+- [Vitest Documentation](https://vitest.dev/)
+- [React Testing Library](https://testing-library.com/react)
+
+### 10.2 Tests
+
 
 ### 10.3 Maintenance
 
